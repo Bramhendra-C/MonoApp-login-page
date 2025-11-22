@@ -1,0 +1,87 @@
+.front-face,
+.back-face {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.65);
+}
+.front-face, .back-face {
+    box-shadow:
+        inset 5px 5px 15px rgba(0,0,0,0.1),
+        inset -5px -5px 15px rgba(255,255,255,0.5),
+        5px 5px 18px rgba(0,0,0,0.12);
+}
+.is-flipped {
+    box-shadow: -20px 0 40px rgba(0,0,0,0.2);
+}
+input:focus {
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.2);
+    transform: scale(1.01);
+}
+input {
+    transition: 0.25s ease;
+}
+.perspective-container {
+    animation: floatBook 6s ease-in-out infinite;
+}
+
+@keyframes floatBook {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+button {
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    border-radius: inherit;
+    background: linear-gradient(45deg, #67a01c, #60a5fa, #2563eb);
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+}
+#goRegister:hover, 
+#goReset:hover,
+#goLoginFromReg:hover,
+#goLoginFromReset:hover {
+    text-shadow: 0 0 6px rgba(59,130,246,0.6);
+}
+body::before {
+    animation: moveBg 14s infinite alternate ease-in-out;
+}
+
+@keyframes moveBg {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+.flipper:hover::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    background: linear-gradient(75deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shine 1.5s ease;
+}
+.front-face::before,
+.back-face::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 12px;
+    left: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.12), transparent);
+}
+.static-right-page {
+    pointer-events: none;
+}
+#bookFlipper {
+    z-index: 50 !important;
+}
