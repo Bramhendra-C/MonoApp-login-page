@@ -1,0 +1,202 @@
+/* =========================================
+   1. CORE LAYOUT & BACKGROUND
+   ========================================= */
+body {
+    font-family: 'Inter', sans-serif; /* Reverted to default from HTML */
+    /* background-color is handled by the gradient below */
+}
+
+/* Modern Gradient Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: radial-gradient(circle, #34a5e6 25%, #000000 75%);
+    z-index: -1;
+    animation: moveBg 14s infinite alternate ease-in-out;
+}
+
+@keyframes moveBg {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+/* =========================================
+   2. 3D BOOK LOGIC
+   ========================================= */
+
+/* Set perspective on the parent of the flipping element */
+.perspective-container {
+    perspective: 2500px;
+    animation: floatBook 6s ease-in-out infinite;
+}
+
+@keyframes floatBook {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Bouncy, Physical Animation */
+.flipper {
+    transition: transform 2.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    transform-style: preserve-3d;
+    position: absolute;
+    transform-origin: right center; /* Hinge is on the right */
+    z-index: 30; /* Starts on top of left page */
+}
+
+/* Flip Direction */
+.is-flipped {
+    transform: rotateY(180deg);
+    z-index: 40;
+    box-shadow: -20px 0 40px rgba(0,0,0,0.2);
+}
+
+/* =========================================
+   3. PAGE STYLING (Glassmorphism)
+   ========================================= */
+
+.front-face,
+.back-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.65);
+    
+    /* Faux Page Shadow/Depth */
+    box-shadow:
+        inset 5px 5px 15px rgba(0,0,0,0.1),
+        inset -5px -5px 15px rgba(255,255,255,0.5),
+        5px 5px 18px rgba(0,0,0,0.12);
+}
+
+/* Inner Spine Shadows */
+.front-face::before,
+.back-face::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 12px;
+    left: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.12), transparent);
+}
+
+/* Front face (Login) */
+.front-face {
+    transform: rotateY(0deg);
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+
+/* Back face (Register/Reset container) */
+.back-face {
+    transform: rotateY(180deg);
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+/* Shine Effect on Flip */
+.flipper:hover::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    background: linear-gradient(75deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shine 1.5s ease;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* =========================================
+   4. FORM ELEMENTS & TRANSITIONS
+   ========================================= */
+
+/* Smooth fade/slide for changing forms */
+.form-panel {
+    transition: opacity 0.4s ease-out, max-height 0.4s ease-out, transform 0.4s ease-out;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transform: translateY(1rem);
+}
+
+.form-panel.is-active {
+    opacity: 1;
+    max-height: 800px;
+    transform: translateY(0);
+}
+
+/* Inputs */
+input {
+    transition: 0.25s ease;
+}
+
+input:focus {
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.2);
+    transform: scale(1.01);
+}
+
+/* Buttons */
+button {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Rainbow border effect on buttons */
+button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    border-radius: inherit;
+    background: linear-gradient(45deg, #67a01c, #bf29dd, #b408df);
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+}
+
+/* Text Glow Hover Effects */
+#goRegister:hover, 
+#goReset:hover,
+#goLoginFromReg:hover,
+#goLoginFromReset:hover {
+    text-shadow: 0 0 6px rgba(59,130,246,0.6);
+}
+
+/* =========================================
+   5. UTILITIES
+   ========================================= */
+
+.static-right-page {
+    pointer-events: none;
+}
+
+#bookFlipper {
+    z-index: 50 !important;
+}
+
+/* Runaway Button Animation */
+.shift-left { transform: translateX(-90%) !important; }
+.shift-right { transform: translateX(90%) !important; }
+.shift-up { transform: translateY(-100%) !important; }
+.shift-down { transform: translateY(100%) !important; }
+
+#btnRegister {
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+/* Ultra-smooth, snappy movement */
+#btnLogin {
+    /* 0.4s makes it faster (snappier) so it escapes quickly but smoothly */
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+}
